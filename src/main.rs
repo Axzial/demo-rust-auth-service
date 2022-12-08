@@ -1,29 +1,31 @@
-use rocket::{routes, get, launch, Rocket, Build, Response, catch, catchers};
-use rocket::response::Responder;
+use rocket::{Build, catch, catchers, get, launch, Rocket, routes};
+use rocket::serde::json::Json;
 use serde::{Deserialize, Serialize};
 
 #[path = "utils/jwt_utils.rs"] mod jwt_utils;
-
-// login dto
-#[derive(Debug, Serialize, Deserialize)]
-pub struct LoginDto {
-    pub email: String,
-    pub password: String,
-}
+#[path = "resource/auth_resource.rs"] mod auth_resource;
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct TokenDTO {
-    pub token: String,
+pub struct ErrorDTO {
+    pub message: String,
 }
 
 #[catch(404)]
-fn not_found() -> &'static str {
-    "Sorry, this route does not exist."
+fn not_found() -> Json<ErrorDTO> {
+    return Json(
+        ErrorDTO {
+            message: "Not found".to_string(),
+        }
+    )
 }
 
 #[catch(500)]
-fn internal_server_error() -> &'static str {
-    "Whoops! Looks like we messed up."
+fn internal_server_error() -> Json<ErrorDTO> {
+    return Json(
+        ErrorDTO {
+            message: "Internal server error".to_string(),
+        }
+    )
 }
 
 #[get("/")]
@@ -36,4 +38,5 @@ fn rocket() -> Rocket<Build> {
     rocket::build()
         .register("/", catchers![not_found])
         .mount("/", routes![index])
+        .mount("/auth", routes![auth_resource::login, auth_resource::register])
 }

@@ -1,6 +1,7 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
+
+use chrono::{Utc};
 use jsonwebtoken::{Algorithm, DecodingKey, encode, EncodingKey, Header};
-use chrono::{Utc, Duration};
 
 const JWT_SECRET: &str = "secret";
 const JWT_EXPIRATION: i64 = 128000;
