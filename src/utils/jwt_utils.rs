@@ -43,6 +43,13 @@ fn get_sub(token: String) -> String {
     return token_data.claims.get("sub").unwrap().to_string();
 }
 
+// get expiration from token
+fn get_exp(token: String) -> i64 {
+    let validator = default_validator();
+    let token_data = jsonwebtoken::decode::<HashMap<String, String>>(&token, &DecodingKey::from_secret(JWT_SECRET.as_ref()), &validator).unwrap();
+    return token_data.claims.get("exp").unwrap().parse::<i64>().unwrap();
+}
+
 fn is_expired(token: String) -> bool {
     let validator = default_validator();
     let token_data = jsonwebtoken::decode::<HashMap<String, String>>(&token, &DecodingKey::from_secret(JWT_SECRET.as_ref()), &validator).unwrap();

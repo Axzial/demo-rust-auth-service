@@ -1,9 +1,13 @@
+mod resource;
+mod utils;
+
 use rocket::{Build, catch, catchers, get, launch, Rocket, routes};
 use rocket::serde::json::Json;
 use serde::{Deserialize, Serialize};
 
-#[path = "utils/jwt_utils.rs"] mod jwt_utils;
-#[path = "resource/auth_resource.rs"] mod auth_resource;
+use crate::utils::jwt_utils;
+
+use crate::resource::auth_resource;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ErrorDTO {
